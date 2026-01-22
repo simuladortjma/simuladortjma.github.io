@@ -1,5 +1,5 @@
-var liq1 = 0;
-var liq2 = 0;
+let liq1 = 0;
+let liq2 = 0;
 
 const base2024 = 10158.31;
 const base2025 = base2024 * 1.05;
@@ -10,12 +10,12 @@ const alim2025 = 2152.62;
 const alim2026 = alim2025 * 1.333344;
 
 function updateQuali(form, classs) {
-    var alloptions = Array("Exigência minima", "Graduação", "Especialização", "Mestrado", "Doutorado");
-    var allvalues = Array(0, 1, 2, 3, 4);
-    var newoptions = Array();
-    var newvalues = Array();
-    var curValue = form.ddQuali.value;
-    var classe = parseInt(classs, 10);
+    let alloptions = Array("Exigência minima", "Graduação", "Especialização", "Mestrado", "Doutorado");
+    let allvalues = Array(0, 1, 2, 3, 4);
+    let newoptions = Array();
+    let newvalues = Array();
+    let curValue = form.ddQuali.value;
+    let classe = parseInt(classs, 10);
     if (classe == 0) {
         newoptions = alloptions;
         newvalues = allvalues;
@@ -78,7 +78,7 @@ function firstload() {
 }
 
 function formatValor(valor) {
-    //var intRegex = /^\d+$/;
+    //let intRegex = /^\d+$/;
     return Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
         valor,
       );
@@ -153,8 +153,8 @@ function calcPSS(periodo, base) {
 }
 
 function dependentesIR(deps, periodo) {
-    var aliq = 0;
-    //var deps = 0;
+    let aliq = 0;
+    //let deps = 0;
     if (periodo >= 1) {
         aliq = deps * 189.59;
     }
@@ -162,12 +162,12 @@ function dependentesIR(deps, periodo) {
 }
 
 function dependentesFunben(deps) {
-    var aliq = deps * 0.01;
+    let aliq = deps * 0.01;
     return Math.floor(aliq * 100) / 100;
 }
 
 function atualizaPold(form) {
-    var pold = parseInt(form.ddNivel.value),
+    let pold = parseInt(form.ddNivel.value),
     capold = 0;
     //capold = parseInt(form.ddProg.value);
 
@@ -177,7 +177,7 @@ function atualizaPold(form) {
 }
 /*
 function atualizaPnew(form) {
-    var pnew = parseInt(form.ddPadrao.value);
+    let pnew = parseInt(form.ddPadrao.value);
     /* Da estrutura nova para a antiga, é impossível saber a posição com certeza. Considera-se Capacitacao = IV sempre, tirando 
     para servidores no começo da carreira, nesse caso considera capacitação = I *//*
     if (pnew < 5) {
@@ -213,7 +213,7 @@ function calcNovoPCCV(salarioBase, nivelDesejado, correl) {
 }
 
 function valorSaude(ftidade, periodo) {
-    var tabela = Array();
+    let tabela = Array();
     if (periodo == 1){
         tabela = Array(639.28, 655.86, 672.45, 740.08, 888.10);
     } else if (periodo == 2) {
@@ -229,8 +229,8 @@ function valorSaude(ftidade, periodo) {
 }
 
 function valorTransporte(vencimento, gasto) {
-    var auxilio = 0;
-    var gastodiaro = 0;
+    let auxilio = 0;
+    let gastodiaro = 0;
     if (isNaN(gasto) || gasto < 0) {
         gastodiario = 0;
     } else {
@@ -259,7 +259,7 @@ function calcSalario(form) {
     $('#aqtext').css('visibility','hidden');
     //if (!form.alimentacao.checked){}
 
-    var periodo = parseInt(form.ddAno.value);
+    let periodo = parseInt(form.ddAno.value);
     // base = 17154.93, // antes do reajuste de 3,7%
 /*
     if (periodo == 1) {
@@ -283,7 +283,7 @@ function calcSalario(form) {
         nivelMerito = parseInt(form.ddPadrao.value);
         correlacoes = [0.40, 0.40, 0.60, 0.60, 1];
     } 
-*/  var base = 0;
+*/  let base = 0;
     if (periodo == 1) {
         base = base2024;
     } else if (periodo == 2){
@@ -292,7 +292,7 @@ function calcSalario(form) {
         base = base2026;
     }
 
-    var alimentacao = 0;
+    let alimentacao = 0;
     if (form.alim.checked){
 
         if (periodo == 1){
@@ -309,34 +309,34 @@ function calcSalario(form) {
     console.log("Alimentacao: ", alimentacao);
    // $('#menu-bar').css('visibility','hidden');
 
-    var reajuste = parseFloat(form.numProposta.value);
+    let reajuste = parseFloat(form.numProposta.value);
     if (isNaN(reajuste)) {
         reajuste = 0;
     } else {
         base = base * (1 + (reajuste / 100));
     }
 
-    var nivel = parseInt(form.ddNivel.value, 10),
+    let nivel = parseInt(form.ddNivel.value, 10),
         correlacoes = [0.477224066, 1, 1.5],
         correl = correlacoes[parseInt(form.ddClasse.value, 10)];
 
-    //var vencimento = correl * Math.ceil(base * Math.pow(ftstep, ftvb) * ftcarga * 100) / 100;
-    var vencimento = calcNovoPCCV(base,nivel,correl);
-    var grat = 0;
+    //let vencimento = correl * Math.ceil(base * Math.pow(ftstep, ftvb) * ftcarga * 100) / 100;
+    let vencimento = calcNovoPCCV(base,nivel,correl);
+    let grat = 0;
     if (form.grat.checked) {
         grat = (vencimento * 0.2);
-        //var aliqirrfferias = valorIRRF(ferias, periodo);
+        //let aliqirrfferias = valorIRRF(ferias, periodo);
     } else {
         grat = 0;
-        //var aliqirrfferias = 0;
+        //let aliqirrfferias = 0;
     }
 
-    var quinquenio = (form.numQuinquenio.value / 100) * vencimento;
+    let quinquenio = (form.numQuinquenio.value / 100) * vencimento;
 
-    //var insal = (form.ddInsa.value) * vencimento;
-    var insal = 0;
+    //let insal = (form.ddInsa.value) * vencimento;
+    let insal = 0;
 
-    var cursos = parseInt(form.cursos.value, 10),
+    let cursos = parseInt(form.cursos.value, 10),
         aqcursos = 0;
     if ( isNaN(cursos)) {
         cursos = 0;
@@ -344,7 +344,7 @@ function calcSalario(form) {
         aqcursos = vencimento * cursos * 0.01;
     }
 
-    var qualificacao = 0;
+    let qualificacao = 0;
     if (form.ddQuali.value == 1) {
         qualificacao = vencimento * 0.05;
     } else if (form.ddQuali.value == 2) {
@@ -362,7 +362,7 @@ function calcSalario(form) {
 
     console.log("Saude: ", saude);
 
-    var creche = 0;
+    let creche = 0;
     if (periodo == 1){
         creche = 369.6 * form.numCreche.value;
     } else if (periodo >= 2){
@@ -371,30 +371,30 @@ function calcSalario(form) {
 
     console.log("Creche: ", creche);
 
-    var outrosRendTrib = parseFloat(form.numOutrosRendTrib.value) || 0;
-    var outrosRendIsnt = parseFloat(form.numOutrosRendIsnt.value) || 0;
+    let outrosRendTrib = parseFloat(form.numOutrosRendTrib.value) || 0;
+    let outrosRendIsnt = parseFloat(form.numOutrosRendIsnt.value) || 0;
 
-    var adicionais = qualificacao + aqcursos + grat + insal + quinquenio + alimentacao + saude + creche;
+    let adicionais = qualificacao + aqcursos + grat + insal + quinquenio + alimentacao + saude + creche;
     
-    var remuneracao = vencimento + adicionais + outrosRendTrib;
+    let remuneracao = vencimento + adicionais + outrosRendTrib;
 
     //A base do PSS é quase a mesma da 'remuneracao', mas sem insalubridade pois a cobrança é opcional
-    var basepss = vencimento + qualificacao;
+    let basepss = vencimento + qualificacao;
     console.log("base pss: ",basepss);
-    //var valorpss = calcPSS(periodo, basepss, tetopss);
-    var valorpss = calcPSS(periodo, basepss);
+    //let valorpss = calcPSS(periodo, basepss, tetopss);
+    let valorpss = calcPSS(periodo, basepss);
 
-    var sindicato = 0;
+    let sindicato = 0;
     if (form.ddSindTipo.value != "nao") {
             sindicato = (basepss + grat) * 0.015;
     }
 
-    var reducaoDepsIRRF = dependentesIR(form.numDepIRRF.value, periodo);
+    let reducaoDepsIRRF = dependentesIR(form.numDepIRRF.value, periodo);
 
     //Funben
     if (form.funben.checked){
         $('#depsFunbendiv').css('visibility','visible');
-        var depsfunben = dependentesFunben(form.numDepFunben.value),
+        let depsfunben = dependentesFunben(form.numDepFunben.value),
             funbentit = (vencimento) * 0.03,
             funbendeps = (vencimento) * depsfunben,
             funben = funbentit + funbendeps;
@@ -405,24 +405,24 @@ function calcSalario(form) {
         funben = 0;
     }
 
-    //var rendTributavel = vencimento + qualificacao + quinquenio + ftinsa * vencimento + outrosRendTrib;
-    var rendTributavel = vencimento + qualificacao + grat;
+    //let rendTributavel = vencimento + qualificacao + quinquenio + ftinsa * vencimento + outrosRendTrib;
+    let rendTributavel = vencimento + qualificacao + grat;
     console.log("GAJ: ", grat);
-    //var deducoesIrrf = valorpss + aliqfunp + aliqFunpFacul + reducaoDepsIRRF;
-    var deducoesIrrf = valorpss + funben + reducaoDepsIRRF;
+    //let deducoesIrrf = valorpss + aliqfunp + aliqFunpFacul + reducaoDepsIRRF;
+    let deducoesIrrf = valorpss + funben + reducaoDepsIRRF;
     console.log(deducoesIrrf,valorpss , funben , reducaoDepsIRRF);
-    var baseirrf = rendTributavel - deducoesIrrf;
+    let baseirrf = rendTributavel - deducoesIrrf;
 
-    var aliqirrf = valorIRRF(baseirrf, periodo);
+    let aliqirrf = valorIRRF(baseirrf, periodo);
     console.log("IR: ",aliqirrf);
 
-    var outrosdescontos = parseFloat(form.numOutros.value) || 0;
+    let outrosdescontos = parseFloat(form.numOutros.value) || 0;
 
-    var descontos = aliqirrf + funben + valorpss + sindicato + outrosdescontos;
+    let descontos = aliqirrf + funben + valorpss + sindicato + outrosdescontos;
 
-    var bruto = remuneracao + outrosRendIsnt;
+    let bruto = remuneracao + outrosRendIsnt;
 
-    var salario = bruto - descontos;
+    let salario = bruto - descontos;
     if (form.name == "myform") {
         liq1 = salario;
     } else {
@@ -431,7 +431,7 @@ function calcSalario(form) {
     //Toggle URP input visibility
 
     //Print results after each calculation
-    /* var diffLiqs = (liq2 - liq1);
+    /* let diffLiqs = (liq2 - liq1);
     document.getElementById("diffLiqAbs").innerHTML = formatValor(diffLiqs);
     document.getElementById("diffLiqPct").innerHTML = (100 * diffLiqs / liq1).toFixed(2).replace(".", ",") + "%";
     document.getElementById("diffLiqPor").innerHTML = ((100 * liq2) / liq1).toFixed(0) + "%"; */
@@ -459,7 +459,7 @@ function calcSalario(form) {
     form.txCursos.value = formatValor(aqcursos);
 
     //Display info on Detailed Results
-    var formid = 1;
+    let formid = 1;
     if (form.name == "myform") {
         $("#tabdetails-rend-1").empty();
         $("#tabdetails-desc-1").empty();
@@ -498,6 +498,6 @@ function calcSalario(form) {
 }
 
 function addDetailValue(parent, form, name, value) {
-    var newEl = "<div>" + name + ": " + formatValor(value) + "</div>";
+    let newEl = "<div>" + name + ": " + formatValor(value) + "</div>";
     $(parent + "-" + form).append(newEl);
 }
