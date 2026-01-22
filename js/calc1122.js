@@ -283,7 +283,7 @@ function calcSalario(form) {
         nivelMerito = parseInt(form.ddPadrao.value);
         correlacoes = [0.40, 0.40, 0.60, 0.60, 1];
     } 
-*/  let base = 0;
+*/  var base = 0;
     if (periodo == 1) {
         base = base2024;
     } else if (periodo == 2){
@@ -292,7 +292,7 @@ function calcSalario(form) {
         base = base2026;
     }
 
-    let alimentacao = 0;
+    var alimentacao = 0;
     if (form.alim.checked){
 
         if (periodo == 1){
