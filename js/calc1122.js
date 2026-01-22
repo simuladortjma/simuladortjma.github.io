@@ -1,6 +1,14 @@
 var liq1 = 0;
 var liq2 = 0;
 
+const base2024 = 10158.31;
+const base2025 = base2024 * 1.05;
+const base2026 = base2025 * 1.0535;
+
+const alim2024 = 1750;
+const alim2025 = 2152.62;
+const alim2026 = alim2025 * 1.333344;
+
 function updateQuali(form, classs) {
     var alloptions = Array("Exigência minima", "Graduação", "Especialização", "Mestrado", "Doutorado");
     var allvalues = Array(0, 1, 2, 3, 4);
@@ -29,6 +37,39 @@ function updateQuali(form, classs) {
         form.ddQuali.value = curValue;
     }
     calcSalario(form);
+    updateSaude(form);
+}
+
+function updateSaude(form) {
+    let periodo = parseInt(form.ddAno.value, 10);
+    let idades = Array("0-30 anos", "31-40 anos", "41-50 anos", "51-60 anos", "Acima de 61 anos");
+    let idades2026 = Array("0-40 anos", "41-75 anos");
+    let valores = Array(0, 1, 2, 3, 4);
+    let valores2026 = Array(0, 1)
+    let novasIdades = Array();
+    let novosValores = Array();
+    let curValue = form.ddIdade.value;
+    if (periodo < 2) {
+        novasIdades = idades;
+        novosValores = valores;
+    } 
+    else if (periodo >= 2){
+        novasIdades = idades2026;
+        novosValores = valores2026;
+    }
+
+    while (form.ddIdade.options.length) form.ddIdade.options[0] = null;
+    for (i = 0; i < novasIdades.length; i++) {
+        // Create a new drop down option with the
+        // display text and value from arr
+        option = new Option(novasIdades[i], novosValores[i]);
+        // Add to the end of the existing options
+        form.ddIdade.options[form.ddIdade.length] = option;
+    }
+    if (novosValores.includes(parseInt(curValue, 10))) {
+        form.ddIdade.value = curValue;
+    }
+    calcSalario(form);
 }
 
 function firstload() {
@@ -44,48 +85,64 @@ function formatValor(valor) {
     //return "R$ " + valor.toFixed(2).replace(".", ",");
     //return valor;
 }
-
 function valorIRRF(base, periodo) {
-    var aliquota = 0;
-    if (periodo < 1) {
-    } else {
+    let aliquota = 0;
+    if (periodo <= 1) { 
         // Ano 2024
-        if (base < 2259.20) {
+        if (base <= 2259.20) {
             aliquota = 0;
-        } else if (base < 2826.65) {
+        } else if (base >= 2259.21 && base <= 2826.65) {
             aliquota = base * 0.075 - 169.44;
-        } else if (base < 3751.05) {
+        } else if (base >= 2826.66 && base <= 3751.05) {
             aliquota = base * 0.15 - 381.44;
-        } else if (base < 4664.68) {
+        } else if (base >= 3751.06 && base <= 4664.68) {
             aliquota = base * 0.225 - 662.77;
-        } else {
+        } else if (base > 4664.68) {
             aliquota = base * 0.275 - 896.00;
         }
+    }
+    else if (periodo >= 2) {
+        // a partir de maio/2025
+        if (base <= 2259.20) {
+            aliquota = 0;
+        } else if (base >= 2259.21 && base <= 2826.65) {
+            aliquota = base * 0.075 - 186.16;
+        } else if (base >= 2826.66 && base <= 3751.05) {
+            aliquota = base * 0.15 - 394.16;
+        } else if (base >= 3751.06 && base <= 4664.68) {
+            aliquota = base * 0.225 - 675.49;
+        } else if (base > 4664.68) {
+            aliquota = base * 0.275 - 908.73;
+        }
+    }
+    else {
+	// periodos futuros	
     }
     return Math.floor(aliquota * 100) / 100;
 }
 
+// Calcula Previdência (FEPA)
 function calcPSS(periodo, base) {
-    var valor = 0;
-    if (periodo == 0) {
+    let valor = 0;
+    if (periodo < 0) {
         valor = base * 0.11;
     } 
-    else if (periodo >= 1) {
+    else if (periodo >= 0) {
        if (base <= 1412.0) {
             //salario minimo
             valor = 0.075 * base;
-        } else if (base <= 2666.68) {
+        } else if (base >= 1412.01 && base <= 2666.68) {
             valor = (base - 1412.0) * 0.09 + 112;
-        } else if (base <= 4000.03) {
+        } else if (base >= 2666.69 && base <= 4000.03) {
             valor = (base - 2666.68) * 0.12 + 218.82;
-        } else if (base <= 7786.02) {
+        } else if (base >= 4000.04 && base <= 7786.02) {
             //teto
             valor = (base - 4000.03) * 0.14 + 378.82;
-        } else if (base <= 13333.48) {
+        } else if (base >= 7786.03 && base <= 13333.48) {
            valor = (base - 7786.02) * 0.145 + 908.86;
-        } else if (base <= 26666.94) {
+        } else if (base >= 13333.49 && base <= 26666.94) {
             valor = (base - 13333.48) * 0.165 + 1713.24;
-        } else if (base <= 52000.54) {
+        } else if (base >= 26666.95 && base <= 52000.54) {
             valor = (base - 26666.94) * 0.19 + 3913.26;
         } else {
             valor = base * 0.22;
@@ -161,6 +218,8 @@ function valorSaude(ftidade, periodo) {
         tabela = Array(639.28, 655.86, 672.45, 740.08, 888.10);
     } else if (periodo == 2) {
         tabela = Array(717.55, 717.55, 1076.32, 1076.32, 1614.48);
+    } else if (periodo == 3) {
+        tabela = Array(896.93, 1255.7);
     }
     if (ftidade == 1000) {
         return 0;
@@ -224,19 +283,24 @@ function calcSalario(form) {
         nivelMerito = parseInt(form.ddPadrao.value);
         correlacoes = [0.40, 0.40, 0.60, 0.60, 1];
     } 
-*/  var base = 0;
+*/  let base = 0;
     if (periodo == 1) {
-        base = 10158.31;
+        base = base2024;
     } else if (periodo == 2){
-        base = 10158.31 * 1.05;
+        base = base2025;
+    } else if (periodo == 3){
+        base = base2026;
     }
 
+    let alimentacao = 0;
     if (form.alim.checked){
 
         if (periodo == 1){
-            var alimentacao = 1750;
+            alimentacao = alim2024;
         } else if (periodo == 2) {
-            alimentacao = 2152.62;
+            alimentacao = alim2025;
+        } else if (periodo == 3) {
+            alimentacao = alim2026;
         } 
     } else {
         alimentacao = 0;
@@ -291,7 +355,7 @@ function calcSalario(form) {
         qualificacao = vencimento * 0.13;
     }
     
-    var saude = 0
+    let saude = 0
     if (form.saude.checked){
         saude = valorSaude(parseInt(form.ddIdade.value, 10), periodo);
     }//: 0;
@@ -301,7 +365,7 @@ function calcSalario(form) {
     var creche = 0;
     if (periodo == 1){
         creche = 369.6 * form.numCreche.value;
-    } else if (periodo == 2){
+    } else if (periodo >= 2){
         creche = 369.6 * 1.05 * form.numCreche.value;
     }
 
