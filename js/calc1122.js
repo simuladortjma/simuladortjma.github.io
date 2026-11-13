@@ -4,10 +4,12 @@ let liq2 = 0;
 const base2024 = 10158.31;
 const base2025 = base2024 * 1.05;
 const base2026 = base2025 * 1.0535;
+const base2027 = base2026 * 1.0894; 
 
 const alim2024 = 1750;
 const alim2025 = 2152.62;
 const alim2026 = alim2025 * 1.333344;
+const alim2027 = alim2026 * 1.1046;
 
 function updateQuali(form, classs) {
     let alloptions = Array("Exigência minima", "Graduação", "Especialização", "Mestrado", "Doutorado");
@@ -220,6 +222,8 @@ function valorSaude(ftidade, periodo) {
         tabela = Array(717.55, 717.55, 1076.32, 1076.32, 1614.48);
     } else if (periodo == 3) {
         tabela = Array(896.93, 1255.7);
+    } else if (periodo == 4) {
+        tabela = Array(1076.32, 1506.85);
     }
     if (ftidade == 1000) {
         return 0;
@@ -290,6 +294,8 @@ function calcSalario(form) {
         base = base2025;
     } else if (periodo == 3){
         base = base2026;
+    } else if (periodo == 4){
+        base = base2027;
     }
 
     let alimentacao = 0;
@@ -301,7 +307,9 @@ function calcSalario(form) {
             alimentacao = alim2025;
         } else if (periodo == 3) {
             alimentacao = alim2026;
-        } 
+        } else if (periodo == 4) {
+            alimentacao = alim2027;
+        }
     } else {
         alimentacao = 0;
     }
